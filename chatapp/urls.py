@@ -16,7 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from chatsystem.views import upload_pdf, upload_success
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('upload/',upload_pdf, name='upload_pdf'),
+    path('upload/success/', upload_success, name='upload_success'),
 ]
