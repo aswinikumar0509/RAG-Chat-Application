@@ -10,11 +10,13 @@ def upload_pdf(request):
     if request.method == 'POST':
         form = PDFUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            pdf_instance = PyPDFLoader(form)
-            loader = pdf_instance.load()
+            pdf_instance = PDFUpload(pdf_file=form.cleaned_data['pdf_file'])
+            pdf_instance.save()
+            loader = PyPDFLoader(pdf_instance.pdf_file.path)
+            documents=loader.load()
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-            texts = text_splitter.split_documents(loader)
-            texts.save()
+            texts = text_splitter.split_documents(documents)
+            # texts.save()
             return redirect('upload_success')
     else:
         form = PDFUploadForm()
