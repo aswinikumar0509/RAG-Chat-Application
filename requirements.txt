@@ -3,3 +3,9 @@ pymongo
 langchain
 langchain_community
 PyPDFLoader
+numpy
+sentence-transformers
+
+
+# Y_JLjJeETvdhDJ155huEjgVKzBEb3H9A4yi22Q5a_rnHOPhyjCqy9g
+# https://649968a8-da4b-4eed-a0f3-aecefa725320.us-east4-0.gcp.cloud.qdrant.io
