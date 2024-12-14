@@ -6,6 +6,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_qdrant import Qdrant
+from langchain_qdrant import QdrantVectorStore
 from langchain_community.vectorstores import Qdrant
 from dotenv import load_dotenv
 import os
@@ -37,12 +38,20 @@ def upload_pdf(request):
 
             # Create or connect to the qdrant vector store
 
-            vectorstore = Qdrant(
-                embeddings = embedding_model,
-                collection_name=qdrant_collection_name,
-                url = qdrant_url,
-                api_key=qdrant_api_key,
+            # vectorstore = Qdrant(
+            #     embeddings = embedding_model,
+            #     collection_name=qdrant_collection_name,
+            #     url = qdrant_url,
+            #     api_key=qdrant_api_key,
 
+            # )
+
+            vectorstore = QdrantVectorStore.from_documents(
+                documents=chunks,
+                embedding=embedding_model,
+                collection_name=qdrant_collection_name,
+                url=qdrant_url,
+                api_key=qdrant_api_key,
             )
 
             for chunk in chunks:
@@ -71,12 +80,11 @@ def query_pdf(request):
             qdrant_api_key = os.getenv('QDRANT_API_KEY')
             qdrant_collection_name = "pdf_chunks"
 
-            vectorstore = Qdrant(
-                embeddings = HuggingFaceEmbeddings(model_name='all-MiniLM-L6-v2'),
+            vectorstore = QdrantVectorStore(
                 collection_name=qdrant_collection_name,
-                url = qdrant_url,
-                api_key=qdrant_api_key
-
+                embedding=HuggingFaceEmbeddings(model_name='all-MiniLM-L6-v2'),
+                url=qdrant_url,
+                api_key=qdrant_api_key,
             )
 
             # Perform similarity search in qdrant
